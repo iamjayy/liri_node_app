@@ -1,163 +1,138 @@
 require("dotenv").config();
 
-//variables to access keys.js
-//variables for required packages
 const keys = require("./keys.js");
-const Spotify = require('node-spotify-api');
-const spotify = new Spotify(keys.spotify);
+const Spotify = require("node-spotify-api");
 const axios = require("axios");
 const fs = require("fs");
-
-
-//arguments to be entered by the user in liri
+const moment = require("moment");
 const appCommand = process.argv[2];
-//console.log("appCommand: " + appCommand); 
-//slice
-const userSearch = process.argv.slice(3).join(" ");
-//console.log("userSearch: " + userSearch); 
 
-// divider will be used as a spacer between the tv data we print in log.txt
-var divider = "\n------------------------------------------------------------\n\n";
-
-//switch statements
-this.liriApp = function(appCommand, userSearch){
-    switch (appCommand){
-        case "spotify-this-song":
-        getSpotify(userSearch);
-        break;
-
-        case "concert-this":
-        getBandsInTown(userSearch);
-        break;
-
-        case "movie-this":
-        getOMDB(userSearch);
-        break;
-
-        case "do-what-it-says":
-        getRandom();
-        break;
-
-        //if left blank then return message to user
-        default:
-        console.log("Enter one of the following commands: 'spotify-this-song', 'concert-this', 'movie-this', 'do-what-it-says' ")
-    };
-};
-
-
-//function for spotify api
-this.getSpotify = function(songName){
-    if(!songName){
-        songName = "The Sign";
-    }
-    spotify.search({ type: 'track', query: songName }, function(err, data) {
-     if (err) {
-      return console.log('Error occurred: ' + err);
-     };
-
-     var jsonData = data.tracks.item[0];
-     
-     for (i=0; i< response.artist; i++) {
-        var spotifyData = [
-            //line break 
-           console.log("============================"),
-           "Artist(s) Name: " + jsonData.album.artists[0].name,
-           "Song Name: " + jsonData.name,
-           "Song Preview Link: " + jsonData.href,
-           "Album: " + jsonData.album.name
-           ].join("\n\n");
-   
-           // Append artistData and the divider to log.txt, print showData to the console
-           fs.appendFile("log.txt", spotifyData + divider, function (err) {
-               if (err) throw err;
-               console.log(spotifyData);
-           });
-     }
-
-    });
-};
-    
-//function for bands in town api
-
-this.getBandsInTown = function(artist){
-    var artist = userSearch;
-    var jsonData = response.data[0]
-
-    var bandQueryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
-
-    axios.get(bandQueryURL).then(function(response){
-
-        var artistData = [
-          //line break 
-          console.log("============================"),
-          "Name of the venue: " + jsonData.venue.name,
-          "Venue Location: " + jsonData.venue.city,
-          "Date of the event: " + moment(jsonData.datetime).format("MM-DD-YYYY"),
-        ].join("\n\n");
-
-        // Append artistData and the divider to log.txt, print showData to the console
-        fs.appendFile("log.txt", artistData + divider, function (err) {
-            if (err) throw err;
-            console.log(artistData);
-        });
-    });
-};
-
-
-//function for omdb api
-
-this.getOMDB = function(movie){
-    if(!movie){
+// movie-this Function to search OMDB API
+function getMovie(movie) {
+    if (!movie) {
         movie = "Mr. Nobody";
     }
     var movieQueryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
 
-    axios.request(movieQueryUrl).then(function(response){
-        // adding a line break 
-        console.log("=============================");
-        var jsonData = response.data;
+    axios.request(movieQueryUrl).then(function (response) {
+            console.log("=============================");
+            console.log("* Title: " + response.data.Title + "\r\n");
+            console.log("* Year Released: " + response.data.Year + "\r\n");
+            console.log("* IMDB Rating: " + response.data.imdbRating + "\r\n");
+            console.log("* Rotten Tomatoes Rating: " + response.data.Ratings[1].Value + "\r\n");
+            console.log("* Country Where Produced: " + response.data.Country + "\r\n");
+            console.log("* Language: " + response.data.Language + "\r\n");
+            console.log("* Plot: " + response.data.Plot + "\r\n");
+            console.log("* Actors: " + response.data.Actors + "\r\n");
+            
+            // Append to log.txt file
+            var movieData = [
+                           "\nMovie title: " + response.data.Title,
+                           "\nYear released: " + response.data.Year,
+                           "\nIMDB rating: " + response.data.imdbRating,
+                           "\nRotten Tomatoes rating: " + response.data.Ratings[1].Value,
+                           "\nCountry where produced: " + response.data.Country,
+                           "\nLanguage: " + response.data.Language,
+                           "\nPlot: " + response.data.Plot,
+                           "\nActors: " + response.data.Actors
+                            ]   
 
-        var movieData = [
-            "Title: " + jsonData.Title,
-            "Year Released: " + jsonData.Year,
-            "IMDB Rating: " + jsonData.imdbRating,
-            "Rotten Tomatoes Rating: " + jsonData.Ratings[1].Value,
-            "Country Where Prodcued: " + jsonData.Country,
-            "Language: " + jsonData.Language,
-            "Plot: " + jsonData.Plot,
-            "Actors: " + jsonData.Actors
-        ].join("\n\n");
-
-        // Append movieData and the divider to log.txt, print showData to the console
-      fs.appendFile("log.txt", movieData + divider, function(err) {
-        if (err) throw err;
-        console.log(movieData);
-    });
-})
+            fs.appendFile("log.txt", movieData, function (err) {
+                if (err) throw err;
+            });
+        });
 };
 
+//concert-this Function to search Bands In Town API
+function getConcert(artist) {
 
-// FUNCTION RANDOM
-this.getRandom = function(){
-    fs.readFile("random.txt", "utf8", function (error, data) {
-        if (error) {
-            return console.log(error);
+            var bandQueryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
 
-        } else {
-            console.log(data);
+            axios.get(bandQueryURL).then(
+                function (response) {
+                    console.log("=============================");
+                    console.log("Name of the venue: " + response.data[0].venue.name + "\r\n");
+                    console.log("Venue Location: " + response.data[0].venue.city + "\r\n");
+                    console.log("Date of event: " + moment(response.data[0].datetime).format("MM-DD-YYYY") + "\r\n");
 
-            var randomData = data.split(",");
-            liriApp(randomData[0], randomData[1]);
+                    // Append to log.txt file
+                    var concertData = [ 
+                                    "\nName of the musician: " + artist,
+                                    "\nName of the venue: " + response.data[0].venue.name,
+                                    "\nVenue location: " + response.data[0].venue.city,
+                                    "\n Date of event: " + moment(response.data[0].datetime).format("MM-DD-YYYY")
+                                    ]
+
+                    fs.appendFile("log.txt", concertData, function (err) {
+                        if (err) throw err;
+                    });
+                });
+        };
+
+//spotify-this-song Function to search Spotify API 
+function getSong(songName) {
+    var spotify = new Spotify(keys.spotify);
+    if (!songName) {
+        songName = "The Sign";
+    };
+
+    spotify.search({ type: 'track', query: songName }, function (err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
         }
-        //console.log("\r\n" + "testing: " + randomData[0] + randomData[1]);
-    });
-}
+        console.log("=============================");
+        console.log("Artist(s) Name: " + data.tracks.items[0].album.artists[0].name + "\r\n");
+        console.log("Song Name: " + data.tracks.items[0].name + "\r\n");
+        console.log("Song Preview Link: " + data.tracks.items[0].href + "\r\n");
+        console.log("Album: " + data.tracks.items[0].album.name + "\r\n");
 
-// FUNCTION to log results from the other funtions
-function logResults(data) {
-fs.appendFile("log.txt", data, function (err) {
-    if (err) throw err;
-});
+        // Append to log.txt file
+        var songData = [
+                      "\nArtist: " + data.tracks.items[0].album.artists[0].name,
+                      "\nSong Name: " + data.tracks.items[0].name,
+                       "\n Preview Link: " + data.tracks.items[0].href, 
+                        "\nAlbum Name: " + data.tracks.items[0].album.name
+                    ]
+
+        fs.appendFile("log.txt", songData, function (err) {
+            if (err) throw err;
+        });
+    });
 };
 
-liriApp(appCommand, userSearch);
+function doWhatItSays() {
+            fs.readFile("random.txt", "utf8", function (error, data) {
+                if (error) {
+                    return console.log(error);
+                } else {
+                    console.log(data);
+                }
+            });
+        };
+
+    function logResults(data) {
+        fs.appendFile("log.txt", data, function (err) {
+            if (err) throw err;
+        });
+    };
+
+    //switch commannds
+    switch (appCommand) {
+        case "spotify-this-song":
+            getSong();
+            break;
+
+        case "concert-this":
+            getConcert();
+            break;
+
+        case "movie-this":
+            getMovie();
+            break;
+
+        case "do-what-it-says":
+            doWhatItSays();
+            break;
+        default:
+            console.log("Enter one of the following commands: 'concert-this', 'spotify-this-song', 'movie-this', 'do-what-it-says' in order to continue");
+    }
