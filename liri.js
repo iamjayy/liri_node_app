@@ -5,9 +5,9 @@ const Spotify = require("node-spotify-api");
 const axios = require("axios");
 const fs = require("fs");
 const moment = require("moment");
-const appCommand = process.argv[2];
+const command = process.argv[2];
 
-// movie-this Function to search OMDB API
+// movie-this 
 function getMovie(movie) {
     if (!movie) {
         movie = "Mr. Nobody";
@@ -43,7 +43,7 @@ function getMovie(movie) {
         });
 };
 
-//concert-this Function to search Bands In Town API
+//concert-this 
 function getConcert(artist) {
 
             var bandQueryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
@@ -69,7 +69,7 @@ function getConcert(artist) {
                 });
         };
 
-//spotify-this-song Function to search Spotify API 
+//spotify-this-song 
 function getSong(songName) {
     var spotify = new Spotify(keys.spotify);
     if (!songName) {
@@ -100,6 +100,7 @@ function getSong(songName) {
     });
 };
 
+// do-what-it-says
 function doWhatItSays() {
             fs.readFile("random.txt", "utf8", function (error, data) {
                 if (error) {
@@ -117,7 +118,7 @@ function doWhatItSays() {
     };
 
     //switch commannds
-    switch (appCommand) {
+    switch (command) {
         case "spotify-this-song":
             getSong();
             break;
@@ -133,6 +134,4 @@ function doWhatItSays() {
         case "do-what-it-says":
             doWhatItSays();
             break;
-        default:
-            console.log("Enter one of the following commands: 'concert-this', 'spotify-this-song', 'movie-this', 'do-what-it-says' in order to continue");
     }
