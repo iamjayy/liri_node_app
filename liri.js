@@ -9,7 +9,7 @@ const command = process.argv[2];
 
 // movie-this 
 function getMovie(movie) {
-    if (!movie) {
+    if (movie === undefined ) {
         movie = "Mr. Nobody";
     }
     var movieQueryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
@@ -48,6 +48,7 @@ function getConcert(artist) {
 
             var bandQueryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
 
+            
             axios.get(bandQueryURL).then(
                 function (response) {
                     console.log("=============================");
@@ -72,7 +73,7 @@ function getConcert(artist) {
 //spotify-this-song 
 function getSong(songName) {
     var spotify = new Spotify(keys.spotify);
-    if (!songName) {
+    if (songName === undefined ) {
         songName = "The Sign";
     };
 

@@ -10,6 +10,9 @@
  * Venue location
 
  * Date of the Event (use moment to format this as "MM/DD/YYYY")
+
+<img src="images/concert-this.png">
+
  * ===============================================
   
  * spotify-this-song
@@ -22,6 +25,9 @@ node liri.js spotify-this-song '<song name here>'
  * A preview link of the song from Spotify
 
  * The album that the song is from
+
+<img src="images/spotify.png">
+
  *  * ===============================================
 
 
@@ -47,3 +53,5 @@ node liri.js spotify-this-song '<song name here>'
  * Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
 
  * It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt
+
+<img src="images/do.png">
