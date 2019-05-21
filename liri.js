@@ -2,28 +2,25 @@ require("dotenv").config();
 
 //variables to access keys.js
 //variables for required packages
-var keys = require("./keys.js");
-var Spotify = require('node-spotify-api');
-var spotify = new Spotify(keys.spotify);
-
-var axios = require("axios");
-var fs = require("fs");
-var moment = require("moment")
+const keys = require("./keys.js");
+const Spotify = require('node-spotify-api');
+const spotify = new Spotify(keys.spotify);
+const axios = require("axios");
+const fs = require("fs");
 
 
 //arguments to be entered by the user in liri
-var appCommand = process.argv[2];
+const appCommand = process.argv[2];
 //console.log("appCommand: " + appCommand); 
 //slice
-var userSearch = process.argv.slice(3).join(" ");
+const userSearch = process.argv.slice(3).join(" ");
 //console.log("userSearch: " + userSearch); 
 
 // divider will be used as a spacer between the tv data we print in log.txt
 var divider = "\n------------------------------------------------------------\n\n";
 
-
-//switch statements 
-function liriApp(appCommand, userSearch){
+//switch statements
+this.liriApp = function(appCommand, userSearch){
     switch (appCommand){
         case "spotify-this-song":
         getSpotify(userSearch);
@@ -44,8 +41,9 @@ function liriApp(appCommand, userSearch){
         //if left blank then return message to user
         default:
         console.log("Enter one of the following commands: 'spotify-this-song', 'concert-this', 'movie-this', 'do-what-it-says' ")
-    }
+    };
 };
+
 
 //function for spotify api
 this.getSpotify = function(songName){
@@ -56,6 +54,7 @@ this.getSpotify = function(songName){
      if (err) {
       return console.log('Error occurred: ' + err);
      };
+
      var jsonData = data.tracks.item[0];
 
      var spotifyData = [
