@@ -48,32 +48,29 @@ function liriApp(appCommand, userSearch){
 };
 
 //function for spotify api
-function getSpotify(songName){
-
+this.getSpotify = function(songName){
     if(!songName){
         songName = "The Sign";
-    };
-
+    }
     spotify.search({ type: 'track', query: songName }, function(err, data) {
-        if (err) {
-          return console.log('Error occurred: ' + err);
-        }
-        //line break 
-        console.log("============================");
-        //return Artist(s)
-        console.log("Artist(s) Name: " + data.tracks.item[0].album.artists[0].name + "\r\n");
-        //return songs name
-        console.log("Song Name: " + data.tracks.items[0].name + "\r\n");
-        //return A preview link of the song from Spotify
-        console.log("Song Preview Link: " + data.tracks.items[0].href + "\r\n");
-        //return The album that the song is from
-        console.log("Album: " + data.tracks.items[0].album.name + "\r\n");
+     if (err) {
+      return console.log('Error occurred: ' + err);
+     };
+     var jsonData = data.tracks.item[0];
 
-        //append to random.txt
-        var logSong = "Spotify log" + "\nArtist: " + data.tracks.items[0].album.artists[0].name;
+     var spotifyData = [
+         //line break 
+        console.log("============================"),
+        "Artist(s) Name: " + jsonData.album.artists[0].name,
+        "Song Name: " + jsonData.name,
+        "Song Preview Link: " + jsonData.href,
+        "Album: " + jsonData.album.name
+        ].join("\n\n");
 
-        fs.appendFile("log.txt", logSong, function (err){
-            if(err) throw err;
+        // Append artistData and the divider to log.txt, print showData to the console
+        fs.appendFile("log.txt", spotifyData + divider, function (err) {
+            if (err) throw err;
+            console.log(spotifyData);
         });
     });
 };
@@ -160,6 +157,5 @@ fs.appendFile("log.txt", data, function (err) {
     if (err) throw err;
 });
 };
-
 
 liriApp(appCommand, userSearch);
