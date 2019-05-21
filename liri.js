@@ -56,21 +56,24 @@ this.getSpotify = function(songName){
      };
 
      var jsonData = data.tracks.item[0];
+     
+     for (i=0; i< response.artist; i++) {
+        var spotifyData = [
+            //line break 
+           console.log("============================"),
+           "Artist(s) Name: " + jsonData.album.artists[0].name,
+           "Song Name: " + jsonData.name,
+           "Song Preview Link: " + jsonData.href,
+           "Album: " + jsonData.album.name
+           ].join("\n\n");
+   
+           // Append artistData and the divider to log.txt, print showData to the console
+           fs.appendFile("log.txt", spotifyData + divider, function (err) {
+               if (err) throw err;
+               console.log(spotifyData);
+           });
+     }
 
-     var spotifyData = [
-         //line break 
-        console.log("============================"),
-        "Artist(s) Name: " + jsonData.album.artists[0].name,
-        "Song Name: " + jsonData.name,
-        "Song Preview Link: " + jsonData.href,
-        "Album: " + jsonData.album.name
-        ].join("\n\n");
-
-        // Append artistData and the divider to log.txt, print showData to the console
-        fs.appendFile("log.txt", spotifyData + divider, function (err) {
-            if (err) throw err;
-            console.log(spotifyData);
-        });
     });
 };
     
