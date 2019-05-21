@@ -36,7 +36,7 @@ node liri.js spotify-this-song '<song name here>'
  * Plot of the movie.
  * Actors in the movie.
 
-<img src="images/movie-this">
+<img src="images/movie-this.png">
 
 
  *  * ===============================================
